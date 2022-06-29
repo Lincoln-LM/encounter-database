@@ -74,7 +74,8 @@ const EncounterArea1List = jBinary.Type({
   correctIdentifier: 'g1',
   EncounterArea1: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u8,
           unused: u8,
@@ -119,7 +120,7 @@ const EncounterArea1List = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = areaSizes[i] / 4;
-      areas.push(this.binary.read([this.EncounterArea1, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea1, slotCount, this.game]));
     }
     return areas;
   },
@@ -132,8 +133,9 @@ const EncounterArea2List = jBinary.Type({
       BCC_SlotRates: [20, 20, 10, 10, 5, 5, 10, 10, 5, 5],
       RatesGrass: [30, 30, 20, 10, 5, 4, 1],
       RatesSurf: [60, 30, 10],
-      setParams(areaSize) {
+      setParams(areaSize, game) {
         this.areaSize = areaSize;
+        this.game = game;
       },
       read() {
         const start = this.binary.tell();
@@ -178,6 +180,7 @@ const EncounterArea2List = jBinary.Type({
           rate,
           rates,
           slots,
+          game: this.game,
         };
       },
     },
@@ -201,7 +204,7 @@ const EncounterArea2List = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const areaSize = areaSizes[i];
-      areas.push(this.binary.read([this.EncounterArea2, areaSize]));
+      areas.push(this.binary.read([this.EncounterArea2, areaSize, this.game]));
     }
     return areas;
   },
@@ -211,7 +214,8 @@ const EncounterArea3List = jBinary.Type({
   correctIdentifiers: ['ru', 'sa', 'em', 'fr', 'lg'],
   EncounterArea3: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u16,
           type: u8,
@@ -232,6 +236,11 @@ const EncounterArea3List = jBinary.Type({
             slotCount,
           ],
         };
+      },
+      read() {
+        const result = this.baseRead();
+        result.game = this.game;
+        return result;
       },
     },
   ),
@@ -254,7 +263,7 @@ const EncounterArea3List = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = Math.floor(areaSizes[i] / 10);
-      areas.push(this.binary.read([this.EncounterArea3, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea3, slotCount, this.game]));
       this.binary.skip(areaSizes[i] - slotCount * 10);
     }
     return areas;
@@ -263,9 +272,10 @@ const EncounterArea3List = jBinary.Type({
 
 const EncounterArea3SwarmList = jBinary.Type({
   correctIdentifiers: ['ru', 'sa', 'rs', 'em', 'fr', 'lg'],
-  EncounterArea3: jBinary.Template(
+  EncounterArea3Swarm: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u16,
           type: u8,
@@ -283,6 +293,11 @@ const EncounterArea3SwarmList = jBinary.Type({
             slotCount,
           ],
         };
+      },
+      read() {
+        const result = this.baseRead();
+        result.game = this.game;
+        return result;
       },
     },
   ),
@@ -305,7 +320,7 @@ const EncounterArea3SwarmList = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = Math.floor(areaSizes[i] / 14);
-      areas.push(this.binary.read([this.EncounterArea3, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea3Swarm, slotCount, this.game]));
       this.binary.skip(areaSizes[i] - slotCount * 14);
     }
     return areas;
@@ -316,7 +331,8 @@ const EncounterArea4List = jBinary.Type({
   correctIdentifiers: ['da', 'pe', 'pt', 'hg', 'ss'],
   EncounterArea4: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u16,
           type: u8,
@@ -339,6 +355,11 @@ const EncounterArea4List = jBinary.Type({
           ],
         };
       },
+      read() {
+        const result = this.baseRead();
+        result.game = this.game;
+        return result;
+      },
     },
   ),
   setParams(game) {
@@ -360,7 +381,7 @@ const EncounterArea4List = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = Math.floor(areaSizes[i] / 10);
-      areas.push(this.binary.read([this.EncounterArea4, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea4, slotCount, this.game]));
       this.binary.skip(areaSizes[i] - slotCount * 10);
     }
     return areas;
@@ -371,7 +392,8 @@ const EncounterArea5List = jBinary.Type({
   correctIdentifiers: ['51', '52'],
   EncounterArea5: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u16,
           type: u8,
@@ -394,6 +416,7 @@ const EncounterArea5List = jBinary.Type({
           result.slots[i].species &= 0x3FF;
         }
         delete result.unused;
+        result.game = this.game;
         return result;
       },
     },
@@ -417,7 +440,7 @@ const EncounterArea5List = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = Math.floor(areaSizes[i] / 4);
-      areas.push(this.binary.read([this.EncounterArea5, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea5, slotCount, this.game]));
       this.binary.skip(areaSizes[i] - slotCount * 4);
     }
     return areas;
@@ -428,7 +451,8 @@ const EncounterArea6List = jBinary.Type({
   correctIdentifiers: ['xy', 'ao'],
   EncounterArea6: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u16,
           type: u8,
@@ -451,6 +475,7 @@ const EncounterArea6List = jBinary.Type({
           result.slots[i].species &= 0x3FF;
         }
         delete result.unused;
+        result.game = this.game;
         return result;
       },
     },
@@ -474,7 +499,7 @@ const EncounterArea6List = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = Math.floor(areaSizes[i] / 4);
-      areas.push(this.binary.read([this.EncounterArea6, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea6, slotCount, this.game]));
       this.binary.skip(areaSizes[i] - slotCount * 4);
     }
     return areas;
@@ -504,15 +529,12 @@ const EncounterAreaFriendSafari = {
     686, 689, 694, 701, 702, 702, 705, 707, 708, 710,
     712, 714,
   ],
-  setParams(game) {
-    this.game = game;
-  },
-  read() {
+  read(game) {
     const data = {
       location: 148,
       type: SlotType.FriendSafari,
       slots: [],
-      game: this.data,
+      game,
     };
     for (let i = 0; i < this.species.length; i += 1) {
       data.slots.push({
@@ -556,7 +578,8 @@ const EncounterArea7List = jBinary.Type({
   correctIdentifiers: ['sm', 'uu'],
   EncounterArea7: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u16,
           type: u8,
@@ -579,6 +602,7 @@ const EncounterArea7List = jBinary.Type({
           result.slots[i].species &= 0x3FF;
         }
         delete result.unused;
+        result.game = this.game;
         return result;
       },
     },
@@ -602,7 +626,7 @@ const EncounterArea7List = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = Math.floor(areaSizes[i] / 4);
-      areas.push(this.binary.read([this.EncounterArea7, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea7, slotCount, this.game]));
       this.binary.skip(areaSizes[i] - slotCount * 4);
     }
     return areas;
@@ -613,7 +637,8 @@ const EncounterArea7bList = jBinary.Type({
   correctIdentifier: 'gg',
   EncounterArea7b: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u16,
           slots: [
@@ -626,6 +651,11 @@ const EncounterArea7bList = jBinary.Type({
             slotCount,
           ],
         };
+      },
+      read() {
+        const result = this.baseRead();
+        result.game = this.game;
+        return result;
       },
     },
   ),
@@ -648,7 +678,7 @@ const EncounterArea7bList = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = Math.floor(areaSizes[i] / 4);
-      areas.push(this.binary.read([this.EncounterArea7b, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea7b, slotCount, this.game]));
       this.binary.skip(areaSizes[i] - slotCount * 4);
     }
     return areas;
@@ -687,7 +717,11 @@ const EncounterArea8List = jBinary.Type({
         return {
           location,
           slots,
+          game: this.game,
         };
+      },
+      setParams(game) {
+        this.game = game;
       },
     },
   ),
@@ -710,7 +744,7 @@ const EncounterArea8List = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const start = this.binary.tell();
-      areas.push(this.binary.read(this.EncounterArea8));
+      areas.push(this.binary.read([this.EncounterArea8, this.game]));
       this.binary.skip(areaSizes[i] + 4 - (this.binary.tell() - start));
     }
     return areas;
@@ -721,7 +755,8 @@ const EncounterArea8bList = jBinary.Type({
   correctIdentifier: 'bs',
   EncounterArea8b: jBinary.Template(
     {
-      setParams(slotCount) {
+      setParams(slotCount, game) {
+        this.game = game;
         this.baseType = {
           location: u16,
           type: u8,
@@ -744,6 +779,7 @@ const EncounterArea8bList = jBinary.Type({
           result.slots[i].species &= 0x3FF;
         }
         delete result.unused;
+        result.game = this.game;
         return result;
       },
     },
@@ -767,7 +803,7 @@ const EncounterArea8bList = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const slotCount = Math.floor(areaSizes[i] / 4);
-      areas.push(this.binary.read([this.EncounterArea8b, slotCount]));
+      areas.push(this.binary.read([this.EncounterArea8b, slotCount, this.game]));
       this.binary.skip(areaSizes[i] - slotCount * 4);
     }
     return areas;
@@ -806,7 +842,11 @@ const EncounterArea8aList = jBinary.Type({
           location,
           type,
           slots,
+          game: this.game,
         };
+      },
+      setParams(game) {
+        this.game = game;
       },
     },
   ),
@@ -829,7 +869,7 @@ const EncounterArea8aList = jBinary.Type({
     }
     for (let i = 0; i < areaSizes.length; i += 1) {
       const start = this.binary.tell();
-      areas.push(this.binary.read(this.EncounterArea8a));
+      areas.push(this.binary.read([this.EncounterArea8a, this.game]));
       this.binary.skip(areaSizes[i] + 4 - (this.binary.tell() - start));
     }
     return areas;
@@ -851,87 +891,6 @@ const EncounterAreaGen = {
   131: EncounterArea3SwarmList,
 };
 
-let slotsRD;
-let slotsGN;
-let slotsYW;
-let slotsBU;
-let slotsRBY;
-let slotsRGBY;
-
-let slotsGD;
-let slotsSV;
-let slotsC;
-let slotsGS;
-let slotsGSC;
-
-let slotsSwarmRSE;
-let slotsR;
-let slotsS;
-let slotsE;
-let slotsFR;
-let slotsLG;
-let slotsRS;
-let slotsRSE;
-let slotsFRLG;
-let slotsRSEFRLG;
-
-let slotsD;
-let slotsP;
-let slotsPT;
-let slotsHG;
-let slotsSS;
-let slotsDP;
-let slotsDPPT;
-let slotsHGSS;
-let slotsDPPTHGSS;
-
-let slotsB;
-let slotsW;
-let slotsB2;
-let slotsW2;
-let slotsBW;
-let slotsB2W2;
-let slotsBWB2W2;
-
-let slotsFriendSafariXY;
-let slotsX;
-let slotsY;
-let slotsXY;
-let slotsOR;
-let slotsAS;
-let slotsORAS;
-let slotsXYORAS;
-
-let slotsSN;
-let slotsMN;
-let slotsUS;
-let slotsUM;
-let slotsSNMN;
-let slotsUSUM;
-let slotsSNMNUSUM;
-
-let slotsGP;
-let slotsGE;
-let slotsGPGE;
-
-let slotsSWSymbol;
-let slotsSWHidden;
-let slotsSHSymbol;
-let slotsSHHidden;
-let slotsSW;
-let slotsSH;
-let slotsSWSH;
-
-let slotsBDOW;
-let slotsSPOW;
-let slotsBDUG;
-let slotsSPUG;
-let slotsBD;
-let slotsSP;
-let slotsBDSP;
-
-let slotsLA;
-
 function load(binary, type) {
   return binary.read(type);
 }
@@ -948,87 +907,85 @@ async function loadGen(gen, name) {
 }
 
 async function loadEncounters() {
-  slotsRD = await loadGen(1, 'red');
-  slotsGN = await loadGen(1, 'blue');
-  slotsYW = await loadGen(1, 'yellow');
-  slotsBU = await loadGen(1, 'blue_jp');
-  slotsRBY = [].concat(slotsRD, slotsGN, slotsYW);
-  slotsRGBY = [].concat(slotsRBY, slotsBU);
+  return {
+    slotsRD: await loadGen(1, 'red'),
+    slotsGN: await loadGen(1, 'blue'),
+    slotsYW: await loadGen(1, 'yellow'),
+    slotsBU: await loadGen(1, 'blue_jp'),
+    // slotsRBY: [].concat(slotsRD, slotsGN, slotsYW),
+    // slotsRGBY: [].concat(slotsRBY, slotsBU),
 
-  slotsGD = await loadGen(2, 'gold');
-  slotsSV = await loadGen(2, 'silver');
-  slotsC = await loadGen(2, 'crystal');
-  slotsGS = [].concat(slotsGD, slotsSV);
-  slotsGSC = [].concat(slotsGS, slotsC);
+    slotsGD: await loadGen(2, 'gold'),
+    slotsSV: await loadGen(2, 'silver'),
+    slotsC: await loadGen(2, 'crystal'),
+    // slotsGS: [].concat(slotsGD, slotsSV),
+    // slotsGSC: [].concat(slotsGS, slotsC),
 
-  slotsSwarmRSE = await loadGen(SlotType.Swarm | 3, 'rse_swarm');
-  slotsR = [].concat(slotsSwarmRSE, await loadGen(3, 'r'));
-  slotsS = [].concat(slotsSwarmRSE, await loadGen(3, 's'));
-  slotsE = [].concat(slotsSwarmRSE, await loadGen(3, 'e'));
-  slotsFR = await loadGen(3, 'fr');
-  slotsLG = await loadGen(3, 'lg');
-  slotsRS = [].concat(slotsR, slotsS);
-  slotsRSE = [].concat(slotsRS, slotsE);
-  slotsFRLG = [].concat(slotsFR, slotsLG);
-  slotsRSEFRLG = [].concat(slotsFRLG, slotsRSE);
+    slotsSwarmRSE: await loadGen(SlotType.Swarm | 3, 'rse_swarm'),
+    // slotsR: [].concat(slotsSwarmRSE, await loadGen(3, 'r')),
+    // slotsS: [].concat(slotsSwarmRSE, await loadGen(3, 's')),
+    // slotsE: [].concat(slotsSwarmRSE, await loadGen(3, 'e')),
+    slotsFR: await loadGen(3, 'fr'),
+    slotsLG: await loadGen(3, 'lg'),
+    // slotsRS: [].concat(slotsR, slotsS),
+    // slotsRSE: [].concat(slotsRS, slotsE),
+    // slotsFRLG: [].concat(slotsFR, slotsLG),
+    // slotsRSEFRLG: [].concat(slotsFRLG, slotsRSE),
 
-  slotsD = await loadGen(4, 'd');
-  slotsP = await loadGen(4, 'p');
-  slotsPT = await loadGen(4, 'pt');
-  slotsHG = await loadGen(4, 'hg');
-  slotsSS = await loadGen(4, 'ss');
-  slotsDP = [].concat(slotsP, slotsD);
-  slotsDPPT = [].concat(slotsDP, slotsPT);
-  slotsHGSS = [].concat(slotsHG, slotsSS);
-  slotsDPPTHGSS = [].concat(slotsDPPT, slotsHGSS);
+    slotsD: await loadGen(4, 'd'),
+    slotsP: await loadGen(4, 'p'),
+    slotsPT: await loadGen(4, 'pt'),
+    slotsHG: await loadGen(4, 'hg'),
+    slotsSS: await loadGen(4, 'ss'),
+    // slotsDP: [].concat(slotsP, slotsD),
+    // slotsDPPT: [].concat(slotsDP, slotsPT),
+    // slotsHGSS: [].concat(slotsHG, slotsSS),
+    // slotsDPPTHGSS: [].concat(slotsDPPT, slotsHGSS),
 
-  slotsB = await loadGen(5, 'b');
-  slotsW = await loadGen(5, 'w');
-  slotsB2 = await loadGen(5, 'b2');
-  slotsW2 = await loadGen(5, 'w2');
-  slotsBW = [].concat(slotsB, slotsW);
-  slotsB2W2 = [].concat(slotsB2, slotsW2);
-  slotsBWB2W2 = [].concat(slotsBW, slotsB2W2);
+    slotsB: await loadGen(5, 'b'),
+    slotsW: await loadGen(5, 'w'),
+    slotsB2: await loadGen(5, 'b2'),
+    slotsW2: await loadGen(5, 'w2'),
+    // slotsBW: [].concat(slotsB, slotsW),
+    // slotsB2W2: [].concat(slotsB2, slotsW2),
+    // slotsBWB2W2: [].concat(slotsBW, slotsB2W2),
 
-  slotsFriendSafariXY = EncounterAreaFriendSafari.read();
-  slotsFriendSafariXY.game = 'x';
-  slotsX = [].concat(await loadGen(6, 'x'), slotsFriendSafariXY);
-  slotsFriendSafariXY.game = 'y';
-  slotsY = [].concat(await loadGen(6, 'y'), slotsFriendSafariXY);
-  slotsOR = await loadGen(6, 'or');
-  slotsAS = await loadGen(6, 'as');
-  slotsXY = [].concat(slotsX, slotsY);
-  slotsORAS = [].concat(slotsOR, slotsAS);
-  slotsXYORAS = [].concat(slotsXY, slotsORAS);
+    slotsX: [].concat(await loadGen(6, 'x'), EncounterAreaFriendSafari.read('x')),
+    slotsY: [].concat(await loadGen(6, 'y'), EncounterAreaFriendSafari.read('y')),
+    slotsOR: await loadGen(6, 'or'),
+    slotsAS: await loadGen(6, 'as'),
+    // slotsXY: [].concat(slotsX, slotsY),
+    // slotsORAS: [].concat(slotsOR, slotsAS),
+    // slotsXYORAS: [].concat(slotsXY, slotsORAS),
 
-  slotsSN = await loadGen(7, 'sn');
-  slotsMN = await loadGen(7, 'mn');
-  slotsUS = await loadGen(7, 'us');
-  slotsUM = await loadGen(7, 'um');
-  slotsSNMN = [].concat(slotsSN, slotsMN);
-  slotsUSUM = [].concat(slotsUS, slotsUM);
-  slotsSNMNUSUM = [].concat(slotsSNMN, slotsUSUM);
+    slotsSN: await loadGen(7, 'sn'),
+    slotsMN: await loadGen(7, 'mn'),
+    slotsUS: await loadGen(7, 'us'),
+    slotsUM: await loadGen(7, 'um'),
+    // slotsSNMN: [].concat(slotsSN, slotsMN),
+    // slotsUSUM: [].concat(slotsUS, slotsUM),
+    // slotsSNMNUSUM: [].concat(slotsSNMN, slotsUSUM),
 
-  slotsGP = await loadGen(7.5, 'gp');
-  slotsGE = await loadGen(7.5, 'ge');
-  slotsGPGE = [].concat(slotsGP, slotsGE);
+    slotsGP: await loadGen(7.5, 'gp'),
+    slotsGE: await loadGen(7.5, 'ge'),
+    // slotsGPGE: [].concat(slotsGP, slotsGE),
 
-  slotsSWSymbol = await loadGen(8, 'sw_symbol');
-  slotsSWHidden = await loadGen(8, 'sw_hidden');
-  slotsSHSymbol = await loadGen(8, 'sh_symbol');
-  slotsSHHidden = await loadGen(8, 'sh_hidden');
-  slotsSW = [].concat(slotsSWSymbol, slotsSWHidden);
-  slotsSH = [].concat(slotsSHSymbol, slotsSHHidden);
-  slotsSWSH = [].concat(slotsSW, slotsSH);
+    slotsSWSymbol: await loadGen(8, 'sw_symbol'),
+    slotsSWHidden: await loadGen(8, 'sw_hidden'),
+    slotsSHSymbol: await loadGen(8, 'sh_symbol'),
+    slotsSHHidden: await loadGen(8, 'sh_hidden'),
+    // slotsSW: [].concat(slotsSWSymbol, slotsSWHidden),
+    // slotsSH: [].concat(slotsSHSymbol, slotsSHHidden),
+    // slotsSWSH: [].concat(slotsSW, slotsSH),
 
-  slotsBDOW = await loadGen(8.5, 'bd');
-  slotsSPOW = await loadGen(8.5, 'sp');
-  slotsBDUG = await loadGen(8.5, 'bd_underground');
-  slotsSPUG = await loadGen(8.5, 'sp_underground');
-  slotsBD = [].concat(slotsBDOW, slotsBDUG);
-  slotsSP = [].concat(slotsSPOW, slotsSPUG);
-  slotsBDSP = [].concat(slotsBD, slotsSP);
+    slotsBDOW: await loadGen(8.5, 'bd'),
+    slotsSPOW: await loadGen(8.5, 'sp'),
+    slotsBDUG: await loadGen(8.5, 'bd_underground'),
+    slotsSPUG: await loadGen(8.5, 'sp_underground'),
+    // slotsBD: [].concat(slotsBDOW, slotsBDUG),
+    // slotsSP: [].concat(slotsSPOW, slotsSPUG),
+    // slotsBDSP: [].concat(slotsBD, slotsSP),
 
-  slotsLA = await loadGen(8.75, 'la');
+    slotsLA: await loadGen(8.75, 'la'),
+  };
 }
-loadEncounters();
