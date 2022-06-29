@@ -4,6 +4,36 @@ function decode(buffer, encoding) {
   const decoder = new TextDecoder(encoding);
   return decoder.decode(buffer);
 }
+
+function invert(obj) {
+  return Object.keys(obj).reduce((ret, key) => {
+    ret[obj[key]] = key;
+    return ret;
+  }, {});
+}
+const AreaSlotType8 = {
+  SymbolMain: 0,
+  SymbolMain2: 1,
+  SymbolMain3: 2,
+
+  HiddenMain: 3, // Both HiddenMain tables include the tree/fishing slots for the area.
+  HiddenMain2: 4,
+
+  Surfing: 5,
+  Surfing2: 6,
+  Sky: 7,
+  Sky2: 8,
+  Ground: 9,
+  Ground2: 10,
+  Sharpedo: 11,
+
+  OnlyFishing: 12, // More restricted hidden table that ignores the weather slots like grass Tentacool.
+  Inaccessible: 13, // Shouldn't show up since these tables are not dumped.
+}
+// eslint-disable-next-line no-undef
+const types = invert(SlotType);
+const areaTypes = invert(AreaSlotType8);
+
 const gameConvert = {
   red: 'Red',
   blue: 'Blue INTL/Green',
@@ -108,7 +138,7 @@ function searchSlots(text, allSlots, species) {
     const { slots } = allSlots[i];
     for (let j = 0; j < slots.length; j += 1) {
       if (species === slots[j].species) {
-        const formatted = `${gameConvert[allSlots[i].game]} ${text.locations[allSlots[i].game][allSlots[i].location]}<br>`;
+        const formatted = `${gameConvert[allSlots[i].game]}: ${types[allSlots[i].type] ? types[allSlots[i].type] : areaTypes[allSlots[i].slots[j].type]}: ${text.locations[allSlots[i].game][allSlots[i].location]}<br>`;
         if (!seen.includes(formatted)) {
           document.getElementById('pokemonLocations').innerHTML += formatted;
           seen.push(formatted);
