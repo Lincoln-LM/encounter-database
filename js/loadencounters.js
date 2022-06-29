@@ -922,9 +922,9 @@ async function loadEncounters() {
     // slotsGSC: [].concat(slotsGS, slotsC),
 
     slotsSwarmRSE: await loadGen(SlotType.Swarm | 3, 'rse_swarm'),
-    // slotsR: [].concat(slotsSwarmRSE, await loadGen(3, 'r')),
-    // slotsS: [].concat(slotsSwarmRSE, await loadGen(3, 's')),
-    // slotsE: [].concat(slotsSwarmRSE, await loadGen(3, 'e')),
+    slotsR: await loadGen(3, 'r'),
+    slotsS: await loadGen(3, 's'),
+    slotsE: await loadGen(3, 'e'),
     slotsFR: await loadGen(3, 'fr'),
     slotsLG: await loadGen(3, 'lg'),
     // slotsRS: [].concat(slotsR, slotsS),

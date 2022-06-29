@@ -132,13 +132,12 @@ function searchSlots(text, allSlots, species) {
   document.getElementById('pokemonName').textContent = text.species[species];
   document.getElementById('pokemonDexNumber').textContent = `#${species}`;
   document.getElementById('pokemonLocations').innerHTML = '';
-  console.log(text.species[species], species);
   const seen = [];
   for (let i = 0; i < allSlots.length; i += 1) {
     const { slots } = allSlots[i];
     for (let j = 0; j < slots.length; j += 1) {
       if (species === slots[j].species) {
-        const formatted = `${gameConvert[allSlots[i].game]}: ${types[allSlots[i].type] ? types[allSlots[i].type] : areaTypes[allSlots[i].slots[j].type]}: ${text.locations[allSlots[i].game][allSlots[i].location]}<br>`;
+        const formatted = `${gameConvert[allSlots[i].game]}: ${types[allSlots[i].type] ? types[allSlots[i].type] : areaTypes[allSlots[i].slots[j].type] ? areaTypes[allSlots[i].slots[j].type] : ''}: ${text.locations[allSlots[i].game][allSlots[i].location]}<br>`;
         if (!seen.includes(formatted)) {
           document.getElementById('pokemonLocations').innerHTML += formatted;
           seen.push(formatted);
