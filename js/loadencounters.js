@@ -1,74 +1,15 @@
-/* eslint-disable linebreak-style */
+/* eslint-disable import/extensions */
 /* eslint-disable no-bitwise */
 /* eslint-disable no-console */
 
-const SlotType = {
-  // Default (un-assigned) encounter slot type.
-  Any: 0,
+import { SlotType } from './enums.js';
+import {
+  u8,
+  u16,
+  u32,
+  identifierType,
+} from './types.js';
 
-  // Slot is encountered via Grass.
-  Grass: 1,
-
-  // Slot is encountered via Surfing.
-  Surf: 2,
-
-  // Slot is encountered via Old Rod (Fishing).
-  Old_Rod: 3,
-
-  // Slot is encountered via Good Rod (Fishing).
-  Good_Rod: 4,
-
-  // Slot is encountered via Super Rod (Fishing).
-  Super_Rod: 5,
-
-  // Slot is encountered via Rock Smash.
-  Rock_Smash: 6,
-
-  // Slot is encountered via Headbutt.
-  Headbutt: 7,
-
-  // Slot is encountered via a Honey Tree.
-  HoneyTree: 8,
-
-  // Slot is encountered via the Bug Catching Contest.
-  BugContest: 9,
-
-  // Slot is encountered via Generation 5 Hidden Grotto.
-  HiddenGrotto: 10,
-
-  // GoPark: 11, UNUSED, now EncounterSlot7g
-
-  // Slot is encountered via Generation 6 Friend Safari.
-  FriendSafari: 12,
-
-  // Slot is encountered via Generation 6 Horde Battle.
-  Horde: 13,
-
-  // Pokeradar: 14, UNUSED, don't need to differentiate Gen4 Radar Slots
-
-  // Slot is encountered via Generation 7 SOS triggers only.
-  SOS: 15,
-
-  // Legends: Arceus
-  Overworld: 16,
-  Distortion: 17,
-  Landmark: 18,
-  OverworldMass: 19,
-  OverworldMMO: 20,
-
-  // Modifiers
-
-  // Used to differentiate the two types of headbutt tree encounters.
-  Special: 1 << 6,
-
-  // Used to identify encounters that are triggered via alternate ESV proc calculations.
-  Swarm: 1 << 7,
-};
-
-const u8 = 'uint8';
-const u16 = ['uint16', true];
-const u32 = ['uint32', true];
-const identifierType = ['string', 2];
 // TODO: be more dry
 const EncounterArea1List = jBinary.Type({
   correctIdentifier: 'g1',
@@ -891,22 +832,22 @@ const EncounterAreaGen = {
   131: EncounterArea3SwarmList,
 };
 
-function load(binary, type) {
+export function load(binary, type) {
   return binary.read(type);
 }
 
-async function loadFile(filename, encounterArea) {
+export async function loadFile(filename, encounterArea) {
   return jBinary.load(filename)
     .then((binary) => load(binary, encounterArea))
     .then();
 }
 
-async function loadGen(gen, name) {
+export async function loadGen(gen, name) {
   // & 0xF corrects gen 3 swarms and lgpe/bdsp/pla to use the correct folders
   return loadFile(`resources/Gen${gen & 0xF}/encounter_${name}.pkl`, [EncounterAreaGen[gen], name]);
 }
 
-async function loadEncounters() {
+export async function loadEncounters() {
   return {
     slotsRD: await loadGen(1, 'red'),
     slotsGN: await loadGen(1, 'blue'),
@@ -989,3 +930,4 @@ async function loadEncounters() {
     slotsLA: await loadGen(8.75, 'la'),
   };
 }
+export const slotsAll = await loadEncounters();
