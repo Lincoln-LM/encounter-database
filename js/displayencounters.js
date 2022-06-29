@@ -63,34 +63,34 @@ async function loadText() {
   locations.fr = locations.r;
   locations.lg = locations.r;
   locations.rse_swarm = locations.r;
-  locations.d = await fetch('./resources/text/text_location_hgss.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\r\n'));
+  locations.d = await fetch('./resources/text/text_location_hgss.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\n'));
   locations.p = locations.d;
   locations.pt = locations.d;
   locations.hg = locations.d;
   locations.ss = locations.d;
-  locations.b = await fetch('./resources/text/text_location_bw2.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\r\n'));
+  locations.b = await fetch('./resources/text/text_location_bw2.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\n'));
   locations.w = locations.b;
   locations.b2 = locations.b;
   locations.w2 = locations.b;
-  locations.x = await fetch('./resources/text/text_location_xy.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\r\n'));
+  locations.x = await fetch('./resources/text/text_location_xy.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\n'));
   locations.y = locations.x;
   locations.or = locations.x;
   locations.as = locations.x;
-  locations.sn = await fetch('./resources/text/text_location_sm.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\r\n'));
+  locations.sn = await fetch('./resources/text/text_location_sm.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\n'));
   locations.mn = locations.sn;
   locations.us = locations.sn;
   locations.um = locations.sn;
-  locations.gp = await fetch('./resources/text/text_location_gg.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\r\n'));
+  locations.gp = await fetch('./resources/text/text_location_gg.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\n'));
   locations.ge = locations.gp;
-  locations.sw_symbol = await fetch('./resources/text/text_location_swsh.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\r\n'));
+  locations.sw_symbol = await fetch('./resources/text/text_location_swsh.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\n'));
   locations.sw_hidden = locations.sw_symbol;
   locations.sh_symbol = locations.sw_symbol;
   locations.sh_hidden = locations.sw_symbol;
-  locations.bd = await fetch('./resources/text/text_location_bdsp.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\r\n'));
+  locations.bd = await fetch('./resources/text/text_location_bdsp.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\n'));
   locations.sp = locations.bd;
   locations.bd_underground = locations.bd;
   locations.sp_underground = locations.bd;
-  locations.la = await fetch('./resources/text/text_location_la.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\r\n'));
+  locations.la = await fetch('./resources/text/text_location_la.txt').then((result) => result.arrayBuffer()).then((result) => decode(result, 'utf-8').split('\n'));
   return {
     locations,
     species,
